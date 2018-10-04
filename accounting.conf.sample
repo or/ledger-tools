@@ -1,0 +1,32 @@
+[general]
+transaction_dir = transaction-history
+# see common.py for details on accounting.keys format
+key_file = accounting.keys.gpg
+
+[account dkb-giro]
+type = dkb
+# just an ID used in the HTML to reference the appropriate node
+id = 0
+# download the CSV manually to find out, should look something like
+# XXXXXXXXXX.csv
+download_filename = <giro-account-number>.csv
+
+[account dkb-creditcard]
+type = dkb
+# just an ID used in the HTML to reference the appropriate node
+id = 1
+# download the CSV manually to find out, should look something like
+# XXXX________XXXX.csv
+download_filename = <creditcard-filename>.csv
+
+[account absa-checking]
+type = absa
+account = <checking-account-number>
+
+[account absa-saving]
+type = absa
+account = <saving-account-number>
+
+[account absa-creditcard]
+type = absa
+account = <credit-card-number-no-dashes>
