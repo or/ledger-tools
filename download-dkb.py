@@ -88,7 +88,7 @@ if __name__ == "__main__":
     else:
         args.from_date = datetime.strptime(args.from_date, "%Y-%m-%d").date()
 
-    config = ConfigParser()
+    config = ConfigParser(interpolation=None)
     config.read("accounting.conf")
 
     browser, tmp_dir = login(config)

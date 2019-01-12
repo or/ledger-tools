@@ -10,6 +10,9 @@ id = 0
 # download the CSV manually to find out, should look something like
 # XXXXXXXXXX.csv
 download_filename = <giro-account-number>.csv
+date_column = 0
+date_format = %d.%m.%Y
+csv_delimiter = ;
 
 [account dkb-creditcard]
 type = dkb
@@ -18,15 +21,24 @@ id = 1
 # download the CSV manually to find out, should look something like
 # XXXX________XXXX.csv
 download_filename = <creditcard-filename>.csv
+date_column = 1
+date_format = %d.%m.%Y
+csv_delimiter = ;
 
 [account absa-checking]
 type = absa
 account = <checking-account-number>
+date_column = 0
+date_format = %Y%m%d
 
 [account absa-saving]
 type = absa
 account = <saving-account-number>
+date_column = 0
+date_format = %Y%m%d
 
 [account absa-creditcard]
 type = absa
 account = <credit-card-number-no-dashes>
+date_column = 0
+date_format = %Y%m%d

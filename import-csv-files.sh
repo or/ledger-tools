@@ -1,9 +1,12 @@
-#!/bin/bash -e -x
+#!/bin/bash -e
 
-for year in 2016 2017 2018; do
-    ~/lib/icsv2ledger/icsv2ledger.py -q -a absa-checking transaction-history/absa-checking-$year.csv generated/absa-checking-$year.ledger
-    ~/lib/icsv2ledger/icsv2ledger.py -q -a absa-saving transaction-history/absa-saving-$year.csv generated/absa-saving-$year.ledger
-    ~/lib/icsv2ledger/icsv2ledger.py -q -a absa-creditcard transaction-history/absa-creditcard-$year.csv generated/absa-creditcard-$year.ledger
-    ~/lib/icsv2ledger/icsv2ledger.py -q -a dkb-giro transaction-history/dkb-giro-$year.csv generated/dkb-giro-$year.ledger
-    ~/lib/icsv2ledger/icsv2ledger.py -q -a dkb-creditcard transaction-history/dkb-creditcard-$year.csv generated/dkb-creditcard-$year.ledger
+for year in $(seq 2016 $(date +%Y)); do
+    for t in absa-checking absa-saving absa-creditcard dkb-giro dkb-creditcard; do
+        echo "importing ${t}-${year}..."
+        in_file="transaction-history/${t}-${year}.csv"
+        out_file="generated/${t}-${year}.ledger"
+        if [ -f "$in_file" ]; then
+            ~/lib/icsv2ledger/icsv2ledger.py -q -a $t $in_file $out_file
+        fi
+    done
 done

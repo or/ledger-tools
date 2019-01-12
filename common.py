@@ -1,7 +1,9 @@
+import csv
 import os
 import subprocess
 import time
-from datetime import date
+from datetime import date, datetime
+from glob import glob
 from selenium.common.exceptions import NoSuchElementException
 
 def load_credentials(config):
@@ -126,35 +128,32 @@ def process_transactions(config, account_name, path):
     if not os.path.exists(path):
         raise Exception("couldn't find {} even after waiting...".format(path))
 
-    if account_name.startswith("dkb"):
-        delimiter = ";"
-    else:
-        delimiter = ","
+    delimiter = config["account " + account_name].get("csv_delimiter", ",").strip()
 
     os.makedirs(config["general"]["transaction_dir"], exist_ok=True)
-    year = date.today().year
     transaction_filename = \
         os.path.join(config["general"]["transaction_dir"],
-                     "{name}-{year}.csv".format(name=account_name, year=year))
-    if not os.path.exists(transaction_filename):
-        current_file = ""
-    else:
-        current_file = open(transaction_filename, "rb").read().decode("utf-8")
+                     "{name}-{{year}}.csv".format(name=account_name))
 
     existing_lines = set()
-    for line in current_file.split("\n"):
-        line = line.strip()
-        if not line:
-            continue
+    for fn in glob(os.path.join(
+            config["general"]["transaction_dir"],
+            "{name}-*.csv".format(name=account_name))):
+        for line in open(fn):
+            line = line.strip()
+            if not line:
+                continue
 
-        if account_name == "dkb-creditcard":
-            line = line.split(delimiter, 1)[1]
+            if account_name == "dkb-creditcard":
+                line = line.split(delimiter, 1)[1]
 
-        existing_lines.add(line.lower())
+            existing_lines.add(line.lower())
 
     new_file = open(path, "rb").read().decode("latin1")
-    current_file = open(transaction_filename, "ab")
-    for line in new_file.split("\n")[1:]:
+    open_files = {}
+    lines = new_file.split("\n")
+    header = lines.pop(0).strip()
+    for line in lines:
         line = line.strip()
         if line.count(delimiter) < 3:
             continue
@@ -166,7 +165,32 @@ def process_transactions(config, account_name, path):
         if check.lower() in existing_lines:
             continue
 
-        current_file.write((line + "\n").encode("utf-8"))
+        d = get_transaction_date(config["account " + account_name], line)
 
-    current_file.close()
+        write_row(transaction_filename, d.year, open_files, line, header)
+
+    for f in open_files.values():
+        f.close()
+
     os.remove(path)
+
+def get_transaction_date(account_config, line):
+    date_column = int(account_config["date_column"])
+    date_format = account_config["date_format"]
+    csv_delimiter = account_config.get("csv_delimiter", ",").strip()
+    row = list(csv.reader([line], delimiter=csv_delimiter))[0]
+    return datetime.strptime(row[date_column], date_format).date()
+
+def write_row(transaction_filename, year, open_files, line, header):
+    if year not in open_files:
+        filename = transaction_filename.format(year=year)
+        write_header = False
+        if not os.path.exists(filename):
+            write_header = True
+
+        open_files[year] = open(filename, "ab")
+
+        if write_header:
+            open_files[year].write((header + "\n").encode("utf-8"))
+
+    open_files[year].write((line + "\n").encode("utf-8"))
