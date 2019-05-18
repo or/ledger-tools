@@ -15,8 +15,8 @@ def login(config):
     chrome_options = webdriver.ChromeOptions()
     prefs = {"download.default_directory": tmp_dir}
     chrome_options.add_experimental_option("prefs", prefs)
-    browser = webdriver.Chrome(executable_path='./chromedriver', chrome_options=chrome_options)
-    browser.get("https://www.dkb.de/banking");
+    browser = webdriver.Chrome(executable_path='./chromedriver', options=chrome_options)
+    browser.get("https://www.dkb.de/banking")
     account = get_elements(browser, name='j_username', enabled=True)[0]
     pin = get_elements(browser, name='j_password', enabled=True)[0]
     account.send_keys(credentials["dkb.login"])
