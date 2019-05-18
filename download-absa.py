@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import os
+import shutil
 import tempfile
 from configparser import ConfigParser
 from datetime import date, datetime, timedelta
@@ -63,7 +64,7 @@ if __name__ == "__main__":
     config.read("accounting.conf")
 
     os.makedirs("tmp", exist_ok=True)
-    tmp_dir = tempfile.mkdtemp(dir="tmp")
+    tmp_dir = tempfile.mkdtemp(dir="/tmp")
     browser = login(config, tmp_dir=tmp_dir)
 
     download_transactions(browser, config, tmp_dir, args.from_date)
@@ -77,3 +78,4 @@ if __name__ == "__main__":
         print(s)
 
     browser.close()
+    shutil.rmtree(tmp_dir)

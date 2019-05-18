@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import os
+import shutil
 import tempfile
 from configparser import ConfigParser
 from datetime import date, datetime, timedelta
@@ -11,7 +12,7 @@ from common import load_credentials, get_elements, process_transactions
 def login(config):
     credentials = load_credentials(config)
     os.makedirs("tmp", exist_ok=True)
-    tmp_dir = tempfile.mkdtemp(dir="tmp")
+    tmp_dir = tempfile.mkdtemp(dir="/tmp")
     chrome_options = webdriver.ChromeOptions()
     prefs = {"download.default_directory": tmp_dir}
     chrome_options.add_experimental_option("prefs", prefs)
@@ -101,3 +102,4 @@ if __name__ == "__main__":
         print(s)
 
     browser.close()
+    shutil.rmtree(tmp_dir)

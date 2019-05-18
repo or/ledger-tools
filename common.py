@@ -174,8 +174,6 @@ def process_transactions(config, account_name, path):
     for f in open_files.values():
         f.close()
 
-    os.remove(path)
-
 def get_transaction_date(account_config, line):
     date_column = int(account_config["date_column"])
     date_format = account_config["date_format"]
