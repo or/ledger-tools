@@ -152,6 +152,8 @@ def process_transactions(config, account_name, path):
     new_file = open(path, "rb").read().decode("latin1")
     open_files = {}
     lines = new_file.split("\n")
+    skip = int(config["account " + account_name].get("skip", "0").strip())
+    lines = lines[skip:]
     header = lines.pop(0).strip()
     for line in lines:
         line = line.strip()
