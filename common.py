@@ -16,7 +16,7 @@ def load_credentials(config):
     absa.pin <login-pin>
     absa.password <password>
     dkb.login <login-name>
-    dkb.password <password>
+    dkb.pin <password>
     [<other>.login <login-name>]
     [<other>.password <password>]
     ------
