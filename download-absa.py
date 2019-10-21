@@ -30,7 +30,7 @@ def download_transactions(browser, config, tmp_dir, from_date):
         modal = get_elements(header, cls="ap-downloadTransactionHistory-modal", css_display="block")[0]
         download2 = get_elements(modal, cls="ap-button-next")[0]
         download2.click()
-        process_transactions(config, account_name, tmp_dir + "/transactionHistory.csv")
+        process_transactions(config, account_name, tmp_dir + "/transactionHistory.csv".format(account_name))
         handles = browser.window_handles
         browser.switch_to_window(handles[-1])
         browser.close()

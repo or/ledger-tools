@@ -1,5 +1,6 @@
 import csv
 import os
+import shutil
 import subprocess
 import time
 from datetime import date, datetime
@@ -125,6 +126,7 @@ def process_transactions(config, account_name, path):
 
         time.sleep(0.1)
 
+    print("processing '{}' for account '{}'".format(path, account_name))
     if not os.path.exists(path):
         raise Exception("couldn't find {} even after waiting...".format(path))
 
@@ -173,6 +175,8 @@ def process_transactions(config, account_name, path):
 
     for f in open_files.values():
         f.close()
+
+    shutil.move(path, path + "." + account_name + ".csv")
 
 def get_transaction_date(account_config, line):
     date_column = int(account_config["date_column"])
