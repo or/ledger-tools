@@ -10,7 +10,7 @@ def login(config, tmp_dir=None):
         prefs["download.default_directory"] = tmp_dir
 
     chrome_options.add_experimental_option("prefs", prefs)
-    browser = webdriver.Chrome(executable_path='./chromedriver',
+    browser = webdriver.Chrome(executable_path='chromedriver',
                                chrome_options=chrome_options)
     browser.get("https://ib.absa.co.za/absa-online/login.jsp")
 
