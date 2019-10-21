@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     if not args.from_date:
-        args.from_date = date.today() - timedelta(days=60)
+        args.from_date = date.today() - timedelta(days=100)
     else:
         args.from_date = datetime.strptime(args.from_date, "%Y-%m-%d").date()
 
