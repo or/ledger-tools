@@ -16,11 +16,13 @@ def login(config, tmp_dir=None):
 
     account = get_elements(browser, name='AccessAccount', enabled=True)[0]
     pin = get_elements(browser, name='PIN', enabled=True)[0]
+    next_button = get_elements(browser, cls="ap-button-next", enabled=True)[0]
     # make sure the blocking overlay is gone
     get_elements(browser, id='pleasewait', css_display="none")[0]
+    #print(credentials)
     account.send_keys(credentials["absa.login"])
     pin.send_keys(credentials["absa.pin"])
-    pin.submit()
+    next_button.click()
 
     captcha = get_elements(browser, id='ui-row-captcha', enabled=True,
                            timeout=2)
